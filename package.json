@@ -1,9 +1,7 @@
 {
   "name": "travel-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
+  "private": true,
   "scripts": {
     "start": "nodemon --exec babel-node app.js",
     "migrate": "cd database && npx sequelize-cli db:migrate",
@@ -12,9 +10,8 @@
     "undoseed": "cd database && npx sequelize-cli db:seed:undo",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "@babel/preset-env": "^7.21.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "csurf": "^1.11.0",
