@@ -1,13 +1,11 @@
 // const express =require('express');
 import express from "express";
-import mongoose from "mongoose";
 import * as dotenv from "dotenv";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import csurf from "csurf";
-import { readdirSync } from "fs";
-import adminroute from "./routes/admin.js";
+
 
 //const articles = require("./routes/article.routes");
 const routeFiles = ["admin", "auth"];
@@ -19,14 +17,17 @@ const csrfProtect = csurf({ cookie: true });
 
 // app setup
 
-app.use(morgan("dev"));
-app.use(cors());
+app.use(morgan("dev")); // dev on;y dev mode 
+app.use(cors({      origin: 'http://localhost:3000',
+    credentials: true,
+}));
 app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 // app.use(csrfProtect)
 
 // app.use("/api/admin",adminroute)
 
+// this is onl;y
 app.use((req, res, next) => {
   console.log("this is my middle war");
   next();
@@ -56,14 +57,6 @@ Promise.all(routeFiles.map((routeFile) => import(`./routes/${routeFile}.js`)))
 // })
 
 //database
-mongoose
-  .connect(process.env.DATABASE)
-  .then(() => {
-    console.log("Database connected successfully");
-  })
-  .catch((err) => {
-    console.log("Database error", err);
-  });
 
 const PORT = process.env.PORT || 5000;
 
