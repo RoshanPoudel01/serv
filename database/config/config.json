@@ -1,29 +1,29 @@
-{
-    "development": {
-      "username": "poudelera17",
-      "password": "3L0BFikZupoD",
-      "database": "neondb",
-      "host": "ep-still-feather-364675.us-east-2.aws.neon.tech",
-      "dialect": "postgres",
-      "ssl": true,
-      "dialectOptions": {
-         "ssl": {
-            "require": true
-         }
-       }
-    },
-    "test": {
-      "username": "poudelera17",
-      "password": "3L0BFikZupoD",
-      "database": "neondb",
-      "host": "ep-still-feather-364675.us-east-2.aws.neon.tech",
-      "dialect": "postgres"
-    },
-    "production": {
-      "username": "poudelera17",
-      "password": "3L0BFikZupoD",
-      "database": "neondb",
-      "host": "ep-still-feather-364675.us-east-2.aws.neon.tech",
-      "dialect": "postgres"
-    }
-  }
+// {
+//     "development": {
+//       "username": "poudelera17",
+//       "password": "3L0BFikZupoD",
+//       "database": "neondb",
+//       "host": "ep-still-feather-364675.us-east-2.aws.neon.tech",
+//       "dialect": "postgres",
+//       "ssl": true,
+//       "dialectOptions": {
+//          "ssl": {
+//             "require": true
+//          }
+//        }
+//     },
+//     "test": {
+//       "username": "poudelera17",
+//       "password": "3L0BFikZupoD",
+//       "database": "neondb",
+//       "host": "ep-still-feather-364675.us-east-2.aws.neon.tech",
+//       "dialect": "postgres"
+//     },
+//     "production": {
+//       "username": "poudelera17",
+//       "password": "3L0BFikZupoD",
+//       "database": "neondb",
+//       "host": "ep-still-feather-364675.us-east-2.aws.neon.tech",
+//       "dialect": "postgres"
+//     }
+//   }

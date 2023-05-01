@@ -5,10 +5,10 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import csurf from "csurf";
-
+import mongoose from "mongoose";
 
 //const articles = require("./routes/article.routes");
-const routeFiles = ["admin", "auth"];
+const routeFiles = ["admin", "auth", "feature", "hotel"];
 
 dotenv.config();
 //express appp
@@ -17,10 +17,8 @@ const csrfProtect = csurf({ cookie: true });
 
 // app setup
 
-app.use(morgan("dev")); // dev on;y dev mode 
-app.use(cors({      origin: 'http://localhost:3000',
-    credentials: true,
-}));
+app.use(morgan("dev")); // dev on;y dev mode
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json({ limit: "5mb" }));
 app.use(cookieParser());
 // app.use(csrfProtect)
@@ -43,7 +41,6 @@ Promise.all(routeFiles.map((routeFile) => import(`./routes/${routeFile}.js`)))
   .then((routes) => {
     // Use routes
     routes.forEach((route, index) => {
-      console.log(routeFiles[(index, "routeFilesrouteFiles")]);
       app.use(`/api/${routeFiles[index]}`, route.default);
     });
   })
@@ -57,6 +54,14 @@ Promise.all(routeFiles.map((routeFile) => import(`./routes/${routeFile}.js`)))
 // })
 
 //database
+mongoose
+  .connect(process.env.DATABASE)
+  .then(() => {
+    console.log("Database connected successfully");
+  })
+  .catch((err) => {
+    console.log("Database error", err);
+  });
 
 const PORT = process.env.PORT || 5000;
 
