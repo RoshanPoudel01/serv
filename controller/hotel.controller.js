@@ -44,7 +44,10 @@ export const addHotel = async (req, res) => {
     response: createHotel,
   });
 };
-
+export const getHotel = async (req, res) => {
+  const getHotels = await Hotel.find({});
+  console.log(getHotels);
+};
 // [
 //   {
 //     _id: new ObjectId("644fce960e59c0a1d955b9cf"),

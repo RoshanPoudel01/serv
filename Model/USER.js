@@ -36,11 +36,10 @@ const userSchema = new Schema(
       max: 64,
     },
 
-    // courses: {
-    //   type: ObjectId,
-    //   required: true,
-    //   ref: "Course",
-    // },
+    bookings: {
+      type: ObjectId,
+      ref: "Booking",
+    },
     upoadlImage: {},
     role: {
       type: [String],

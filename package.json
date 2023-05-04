@@ -26,7 +26,8 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "pg": "^8.10.0",
-    "sequelize": "^6.31.0"
+    "sequelize": "^6.31.0",
+    "stripe": "^12.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",

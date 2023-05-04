@@ -8,7 +8,7 @@ import csurf from "csurf";
 import mongoose from "mongoose";
 
 //const articles = require("./routes/article.routes");
-const routeFiles = ["admin", "auth", "feature", "hotel"];
+const routeFiles = ["admin", "auth", "feature", "hotel","booking"];
 
 dotenv.config();
 //express appp
