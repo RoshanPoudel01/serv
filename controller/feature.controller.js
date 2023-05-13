@@ -1,10 +1,8 @@
 import Feature from "../Model/FEATURE";
+import { responseObj } from "../utils";
 export const addHotelFeature = async (req, res) => {
   //   console.log("hi");
-  const responseObj = {
-    response: {},
-    message: "Please Enter feature name",
-  };
+
   const { featureName } = req.body;
   if (!featureName) {
     return res.status(400).json(responseObj);
@@ -39,5 +37,9 @@ export const addHotelFeature = async (req, res) => {
 
 export const getFeature = async (req, res) => {
   const getallfeature = await Feature.find({});
-  console.log(getallfeature);
+ res.status(201).json({
+      ...responseObj,
+      message: "Feature fetch successfully",
+      response: getallfeature,
+    });
 };

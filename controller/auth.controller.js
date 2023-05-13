@@ -98,9 +98,9 @@ export const userLogin = async (req, res) => {
         .status(401)
         .json({ ...responseObj, message: "Please enter a valid password" });
     }
-
+console.log(userExists)
     const token = jwt.sign(
-      { _id: userExists?.dataValues?.id },
+      { _id: userExists?._id },
       process.env.JWTSECRET,
       {
         expiresIn: "24h",

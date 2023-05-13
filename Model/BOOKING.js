@@ -21,18 +21,20 @@ const bookingSchema = new Schema(
       default:1
     },
 
-    owner: {
+    bookedBy: {
       type: ObjectId,
     //   required: true,
       ref: "User",
+    },
+    Hotel: {
+      type: ObjectId,
+      //   required: true,
+      ref: "Hotel",
     },
     paid: {
         type: Boolean,
         default:false    
         },
-    transaction_detail: {
-        type:String
-    }
   },
 
   { timestamps: true }

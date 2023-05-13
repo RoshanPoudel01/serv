@@ -1,6 +1,5 @@
 // const express =require('express');
 import express from "express";
-import * as dotenv from "dotenv";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -10,7 +9,7 @@ import mongoose from "mongoose";
 //const articles = require("./routes/article.routes");
 const routeFiles = ["admin", "auth", "feature", "hotel","booking"];
 
-dotenv.config();
+require('dotenv').config()
 //express appp
 const app = express();
 const csrfProtect = csurf({ cookie: true });

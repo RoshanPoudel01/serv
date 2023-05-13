@@ -2,8 +2,16 @@ import FEATUREaaa from "../Model/FEATURE";
 import Hotel from "../Model/HOTEL";
 import mongoose, { isValidObjectId } from "mongoose";
 import { Types } from "mongoose";
+import { responseObj } from "../utils";
+
 
 const { ObjectId } = Types;
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: "dnjy9jxbk",
+  api_key: "542287754895969",
+  api_secret: "LqTWCnmvBKMhYtI6SUdMSIznnlI",
+});
 
 export const addHotel = async (req, res) => {
   // console.log(req.body);
@@ -11,9 +19,16 @@ export const addHotel = async (req, res) => {
     response: {},
     message: "Please Enter All Fields",
   };
-  const { name, description, email, address, phone, subtitle, price, feature } =
-    req.body;
-  console.log(feature);
+  const {
+    name,
+    description,
+    email,
+    address,
+    phone,
+    subtitle,
+    price,
+    bannerimage,
+  } = req.body;
   if (
     !name ||
     !description ||
@@ -21,8 +36,7 @@ export const addHotel = async (req, res) => {
     !address ||
     !phone ||
     !subtitle ||
-    !price ||
-    !feature
+    !price
   ) {
     return res.status(400).json(responseObj);
   }
@@ -34,8 +48,22 @@ export const addHotel = async (req, res) => {
       message: "Hotel with this email address already exists",
     });
   }
-  const createHotel = new Hotel({
-    ...req.body,
+  // console.log(req.body.bannerimage);
+
+  const resss = await cloudinary.uploader.upload(req.body.bannerimage, { public_id: name });
+  console.log(resss?.url);
+  console.log(subtitle)
+
+  const createHotel = await new Hotel({
+    name: name,
+    email: email,
+    address: address,
+    price: price,
+    phone: phone,
+    description: description,
+    subtitle: subtitle,
+    bannerimage: resss?.url,
+    owner:req.user._id
   });
   await createHotel.save();
   res.status(201).json({
@@ -46,7 +74,11 @@ export const addHotel = async (req, res) => {
 };
 export const getHotel = async (req, res) => {
   const getHotels = await Hotel.find({});
-  console.log(getHotels);
+   res.status(201).json({
+      ...responseObj,
+      message: "Hotel fetch successfully",
+      response: getHotels,
+    });
 };
 // [
 //   {

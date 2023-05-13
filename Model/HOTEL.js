@@ -14,7 +14,7 @@ const hotelSchema = new Schema(
       required: true,
       unique: true,
     },
-    subTitle: {
+    subtitle: {
       type: String,
       lowercase: true,
     },
@@ -26,9 +26,13 @@ const hotelSchema = new Schema(
       type: String,
       trim: true,
     },
-    bannerImage: {},
+    bannerimage: {},
     // Feature: [],
-
+    owner: {
+      type: ObjectId,
+    //   required: true,
+      ref: "User",
+    },
     feature: [
       {
         type: ObjectId,
