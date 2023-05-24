@@ -1,4 +1,5 @@
 import FEATUREaaa from "../Model/FEATURE";
+import User from "../Model/USER"
 import Hotel from "../Model/HOTEL";
 import mongoose, { isValidObjectId } from "mongoose";
 import { Types } from "mongoose";
@@ -80,6 +81,17 @@ export const getHotel = async (req, res) => {
       response: getHotels,
     });
 };
+
+export const getHotelDetail = async (req, res) => {
+   const hotelId = req.query.id;
+console.log(hotelId)
+  const getHotels = await Hotel.findOne({_id:hotelId}).populate("feature","name");
+   res.status(201).json({
+      ...responseObj,
+      message: "Hotel fetch successfully",
+      response: getHotels,
+    });
+};
 // [
 //   {
 //     _id: new ObjectId("644fce960e59c0a1d955b9cf"),
@@ -116,3 +128,9 @@ export const getHotel = async (req, res) => {
 //     updatedAt: 2023-05-01T14:39:27.092Z,
 //     __v: 0
 //   }
+
+
+const getMyHotel = async(req,res) => {
+  const findUser = await User.findById(req.user._id)
+  
+}

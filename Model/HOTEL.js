@@ -22,7 +22,7 @@ const hotelSchema = new Schema(
       type: String,
       trim: true,
     },
-    hotelDescprition: {
+    description: {
       type: String,
       trim: true,
     },

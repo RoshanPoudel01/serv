@@ -2,6 +2,7 @@
 import User from "../Model/USER";
 import { hashPassword, comparePassword } from "../utils/bycrypt.js";
 import jwt from "jsonWebToken";
+import { responseObj } from "../utils";
 
 export const userSignUp = async (req, res, next) => {
   const errorresponse = {
@@ -121,3 +122,51 @@ console.log(userExists)
     console.log(exception);
   }
 };
+
+export const changePassword = async (req, res) => {
+  const findUser = await User.findById(req.user._id)
+  console.log(findUser.password)
+  const errorresponse = {
+    message: "Please enter  all the fields",
+    response: {},
+  };
+  
+  // js desctructire
+  const { currentpassword, newpassword, confirmnewpassword } = req.body;
+  console.log(currentpassword)
+  if (!currentpassword || !newpassword || !confirmnewpassword) {
+      return res.status(400).json(errorresponse);
+  }
+    const comparedPassword = await comparePassword(
+      currentpassword,
+      findUser.password
+  );
+  // console.log(comparedPassword)
+  if (!comparedPassword) {
+      //  console.log("password not match")
+      return res
+        .status(400)
+        .json({ ...responseObj, message: "Please enter a valid password" });
+  }
+  if (comparedPassword) {
+    if (newpassword === confirmnewpassword) {
+      const hashedPassword = await hashPassword(newpassword);
+      try {
+        const findUser = await User.findOneAndUpdate({ _id: req.user._id }, {
+          password: hashedPassword
+        }, { new: true });
+          return res.status(200).json({
+      ...responseObj,
+      message: "Congrannnnn",
+      response: {
+        user:findUser
+      },
+    });
+      } catch (error) {
+        
+      }
+      
+    }
+  }
+} 
+

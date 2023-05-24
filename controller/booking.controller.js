@@ -65,8 +65,8 @@ export const bookHotel = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "npr",
-            unit_amount: calculacted,
+            currency: "usd",
+            unit_amount: calculacted*100,
             product_data: {
               name: getHotel?.name,
             },
@@ -126,9 +126,16 @@ export const checkPaymentStatus = async (req, res) => {
         message: "Hotel doesnot exist",
       });
     }
+   
     //   const findPaymentLog = await PAYMENTLOG.find({ User: req.user._id, Hotel: hotelId })
 
     const findUser = await USER.findById(req.user._id);
+    if (!getHotel) {
+      return res.status(400).json({
+        ...responseObj,
+        message: "Hotel doesnot exist",
+      });
+    }
     if (findUser?.stripeSession?.hotelId !== hotelId) {
       return res.status(400).json({
         ...responseObj,
@@ -196,4 +203,18 @@ export const checkPaymentStatus = async (req, res) => {
   //         })
 
   //     }
+};
+
+export const bookingHistory = async (req, res) => {
+  const bookings = await BOOKING.find({bookedBy:req?.user?._id}).populate("Hotel","name email address");
+  
+  try {
+    return res.status(201).json({
+      ...responseObj,
+      message: "your history has been fetch succeffully",
+      response: {
+        Hotels: bookings,
+      },
+    });
+  } catch (error) {}
 };
