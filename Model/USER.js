@@ -44,7 +44,7 @@ const userSchema = new Schema(
     role: {
       type: [String],
       default: ["Normal User"],
-      enum: ["Normal User", "Admin"],
+      enum: ["Normal User","Client", "Admin"],
     },
     // stripe_account_id: { type: String, default: "" },
     stripeSession: {},
@@ -52,6 +52,7 @@ const userSchema = new Schema(
     //   data: String,
     //   default: "",
     // },
+    stripe_account_id:{}
   },
 
   { timestamps: true }

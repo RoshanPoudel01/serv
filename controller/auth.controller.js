@@ -3,7 +3,9 @@ import User from "../Model/USER";
 import { hashPassword, comparePassword } from "../utils/bycrypt.js";
 import jwt from "jsonWebToken";
 import { responseObj } from "../utils";
-
+const stripe = require("stripe")(
+  "sk_test_51N2DKlBDe5c2rfDAZlaYAUJWD6ORem7RLEZFoDAZcKyPx55mSltZ2L2KrgeHboSO7hr7pSzcO1OpvGVhdosoeEDW00VrQx4XTO"
+);
 export const userSignUp = async (req, res, next) => {
   const errorresponse = {
     message: "Please enter fill all the details",
@@ -99,7 +101,7 @@ export const userLogin = async (req, res) => {
         .status(401)
         .json({ ...responseObj, message: "Please enter a valid password" });
     }
-console.log(userExists)
+// console.log(userExists)
     const token = jwt.sign(
       { _id: userExists?._id },
       process.env.JWTSECRET,
@@ -168,5 +170,82 @@ export const changePassword = async (req, res) => {
       
     }
   }
-} 
+}
+
+export const userLogout = (req, res) => {
+  console.log("logout")
+  res.clearCookie("user_token");
+  res.end();
+}
+
+
+export const makeClient = async (req, res) => {
+  try {
+    console.log("jio")
+    // 1. find user from db
+    const user = await User.findById(req.user._id).exec();
+    // 2. if user dont have stripe_account_id yet, then create new
+    console.log(user)
+
+    if (!user.stripe_account_id) {
+      console.log("jjj")
+      const account = await stripe.accounts.create({ type: "express" });
+       console.log('ACCOUNT => ', account.id)
+      user.stripe_account_id = account.id;
+      user.save();
+    }
+    // 3. create account link based on account id (for frontend to complete onboarding)
+    let accountLink = await stripe.accountLinks.create({
+      account: user.stripe_account_id,
+      refresh_url:"https://www.google.com/",
+      return_url: "https://www.google.com/?haha=1",
+      type: "account_onboarding",
+    });
+    //  console.log(accountLink)
+    // 4. pre-fill any info such as email (optional), then send url resposne to frontend
+    accountLink = Object.assign(accountLink, {
+      "stripe_user[email]": user.email,
+    });
+    // 5. then send the account link as response to fronend
+    // response ma account link pathau 200 ma ani ui ma tyo open gara
+    return res.status(200).json({
+      ...responseObj,
+      response: {
+       Link:accountLink
+      }
+    })
+  } catch (err) {
+    console.log("MAKE CLIENT ERR ", err);
+  }
+};
+export const getAccountStatus = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).exec();
+    const account = await stripe.accounts.retrieve(user.stripe_account_id);
+     if (!account.charges_enabled) {
+      console.log("helo");
+      return res.status(401).send({ msg: "unauthorized" });
+    } else {
+      const statusUpdated = await User.findByIdAndUpdate(
+        user._id,
+        {
+          stripe_seller: account,
+          $addToSet: { role: "Client" },
+        },
+        { new: true },
+      )
+        .select("-password")
+        .exec();
+       return res.status(200).json({
+      ...responseObj,
+      response: {
+        account: statusUpdated,
+        isClient:true
+      }
+    })
+     }
+  } catch (err) {
+    console.log(err);
+  }
+};
 

@@ -92,6 +92,81 @@ console.log(hotelId)
       response: getHotels,
     });
 };
+export const deleteHotel = async (req, res) => {
+  try
+    {   const hotelId = req.query.id;
+console.log(hotelId)
+  const deleteHotels = await Hotel.deleteOne({_id:hotelId})
+   return res.status(201).json({
+      ...responseObj,
+      message: "Hotel Delete successfully"
+   });
+  }
+  catch (error) {
+    console.log(error)
+  }
+};
+
+export const editHotel = async (req, res) => {
+     const hotelId = req.query.id;
+console.log(hotelId)
+  const getHotels = await Hotel.findOne({ _id: hotelId }).populate("feature", "name");
+    // console.log(req.body);
+  const responseObj = {
+    response: {},
+    message: "Please Enter All Fields",
+  };
+  const {
+    name,
+    description,
+    email,
+    address,
+    phone,
+    subtitle,
+    price,
+    bannerimage,
+  } = req.body;
+  if (
+    !name ||
+    !description ||
+    !email ||
+    !address ||
+    !phone ||
+    !subtitle ||
+    !price||!bannerimage
+  ) {
+    return res.status(400).json(responseObj);
+  }
+  const hotelCheck = await Hotel.findOne({ email }).exec();
+
+  if (hotelCheck) {
+    return res.status(400).json({
+      ...responseObj,
+      message: "Hotel with this email address already exists",
+    });
+  }
+  // console.log(req.body.bannerimage);
+
+  const resss = await cloudinary.uploader.upload(req.body.bannerimage, { public_id: name });
+  console.log(resss?.url);
+  console.log(subtitle)
+  const setNewValues = await Hotel.findOneAndUpdate({ _id: hotelId },
+    {
+    name: name,
+    email: email,
+    address: address,
+    price: price,
+    phone: phone,
+    description: description,
+    bannerimage: resss?.url
+    },{new:true}
+  )
+   return res.status(201).json({
+      ...responseObj,
+      message: "Hotel fetch successfully",
+      response: getHotels,
+    });
+}
 // [
 //   {
 //     _id: new ObjectId("644fce960e59c0a1d955b9cf"),
@@ -130,7 +205,13 @@ console.log(hotelId)
 //   }
 
 
-const getMyHotel = async(req,res) => {
-  const findUser = await User.findById(req.user._id)
-  
+export const getMyHotel = async(req,res) => {
+  const findUser = await User.findById(req.user._id);
+  console.log(findUser?._id);
+   const getHotels = await Hotel.find({owner:findUser._id});
+   res.status(201).json({
+      ...responseObj,
+      message: "Hotel fetch successfully",
+      response: getHotels,
+    });
 }
